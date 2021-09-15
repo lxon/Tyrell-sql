@@ -65,7 +65,7 @@ During the rebuild table schema process, notice few key points:
 
 2. Possible legacy query
 
-   In reality, simply avoid optimizing the legacy query, cause most of the time, the unoptimized query serves the purpose of user request or feature. Any minor changes to the query may cause instability or bug in the application. In any normal case, stability & feature is having higher priority than performance, in short Feature > Performance.
+   In reality, simply avoid optimizing the legacy query, cause most of the time, the unoptimized query serves the purpose of user request or feature. Any minor changes to the query may cause instability or bug in the application. In any normal case, stability & feature are having higher priority than performance, in short Feature > Performance.
 
 ## Possible area of optimization
 
