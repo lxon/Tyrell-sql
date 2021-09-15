@@ -89,7 +89,7 @@ During the rebuild table schema process, notice few key points:
 
 - https://www.db-fiddle.com/f/3wLZj9cSzTMGQGhwRirnLD/4
 
-## Resource spent
+## Timeline
 
-- 2, 3 hours for planning
-- 3, 4 hours for rebuild & optimization
+- 2~3 hours for planning
+- 3~4 hours for rebuild & optimization
