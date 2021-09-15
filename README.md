@@ -33,88 +33,7 @@ Jobs.sort_order AS `Jobs__sort_order`,
 Jobs.publish_status AS `Jobs__publish_status`,
 Jobs.version AS `Jobs__version`,
 Jobs.created_by AS `Jobs__created_by`,
-Jobs.created AS `Jobs__created`,
-Jobs.modified AS `Jobs__modified`,
-Jobs.deleted AS `Jobs__deleted`,
-JobCategories.id AS `JobCategories__id`,
-JobCategories.name AS `JobCategories__name`,
-JobCategories.sort_order AS `JobCategories__sort_order`,
-JobCategories.created_by AS `JobCategories__created_by`,
-JobCategories.created AS `JobCategories__created`,
-JobCategories.modified AS `JobCategories__modified`,
-JobCategories.deleted AS `JobCategories__deleted`,
-JobTypes.id AS `JobTypes__id`,
-JobTypes.name AS `JobTypes__name`,
-JobTypes.job_category_id AS `JobTypes__job_category_id`,
-JobTypes.sort_order AS `JobTypes__sort_order`,
-JobTypes.created_by AS `JobTypes__created_by`,
-JobTypes.created AS `JobTypes__created`,
-JobTypes.modified AS `JobTypes__modified`,
-JobTypes.deleted AS `JobTypes__deleted`
-FROM jobs Jobs
-LEFT JOIN jobs_personalities JobsPersonalities
-ON Jobs.id = (JobsPersonalities.job_id)
-LEFT JOIN personalities Personalities
-ON (Personalities.id = (JobsPersonalities.personality_id)
-AND (Personalities.deleted) IS NULL)
-LEFT JOIN jobs_practical_skills JobsPracticalSkills
-ON Jobs.id = (JobsPracticalSkills.job_id)
-LEFT JOIN practical_skills PracticalSkills
-ON (PracticalSkills.id = (JobsPracticalSkills.practical_skill_id)
-AND (PracticalSkills.deleted) IS NULL)
-LEFT JOIN jobs_basic_abilities JobsBasicAbilities
-ON Jobs.id = (JobsBasicAbilities.job_id)
-LEFT JOIN basic_abilities BasicAbilities
-ON (BasicAbilities.id = (JobsBasicAbilities.basic_ability_id)
-AND (BasicAbilities.deleted) IS NULL)
-LEFT JOIN jobs_tools JobsTools
-ON Jobs.id = (JobsTools.job_id)
-LEFT JOIN affiliates Tools
-ON (Tools.type = 1
-AND Tools.id = (JobsTools.affiliate_id)
-AND (Tools.deleted) IS NULL)
-LEFT JOIN jobs_career_paths JobsCareerPaths
-ON Jobs.id = (JobsCareerPaths.job_id)
-LEFT JOIN affiliates CareerPaths
-ON (CareerPaths.type = 3
-AND CareerPaths.id = (JobsCareerPaths.affiliate_id)
-AND (CareerPaths.deleted) IS NULL)
-LEFT JOIN jobs_rec_qualifications JobsRecQualifications
-ON Jobs.id = (JobsRecQualifications.job_id)
-LEFT JOIN affiliates RecQualifications
-ON (RecQualifications.type = 2
-AND RecQualifications.id = (JobsRecQualifications.affiliate_id)
-AND (RecQualifications.deleted) IS NULL)
-LEFT JOIN jobs_req_qualifications JobsReqQualifications
-ON Jobs.id = (JobsReqQualifications.job_id)
-LEFT JOIN affiliates ReqQualifications
-ON (ReqQualifications.type = 2
-AND ReqQualifications.id = (JobsReqQualifications.affiliate_id)
-AND (ReqQualifications.deleted) IS NULL)
-INNER JOIN job_categories JobCategories
-ON (JobCategories.id = (Jobs.job_category_id)
-AND (JobCategories.deleted) IS NULL)
-INNER JOIN job_types JobTypes
-ON (JobTypes.id = (Jobs.job_type_id)
-AND (JobTypes.deleted) IS NULL)
-WHERE ((JobCategories.name LIKE '%キャビンアテンダント%'
-OR JobTypes.name LIKE '%キャビンアテンダント%'
-OR Jobs.name LIKE '%キャビンアテンダント%'
-OR Jobs.description LIKE '%キャビンアテンダント%'
-OR Jobs.detail LIKE '%キャビンアテンダント%'
-OR Jobs.business_skill LIKE '%キャビンアテンダント%'
-OR Jobs.knowledge LIKE '%キャビンアテンダント%'
-OR Jobs.location LIKE '%キャビンアテンダント%'
-OR Jobs.activity LIKE '%キャビンアテンダント%'
-OR Jobs.salary_statistic_group LIKE '%キャビンアテンダント%'
-OR Jobs.salary_range_remarks LIKE '%キャビンアテンダント%'
-OR Jobs.restriction LIKE '%キャビンアテンダント%'
-OR Jobs.remarks LIKE '%キャビンアテンダント%'
-OR Personalities.name LIKE '%キャビンアテンダント%'
-OR PracticalSkills.name LIKE '%キャビンアテンダント%'
-OR BasicAbilities.name LIKE '%キャビンアテンダント%'
-OR Tools.name LIKE '%キャビンアテンダント%'
-OR CareerPaths.name LIKE '%キャビンアテンダント%'
+...
 OR RecQualifications.name LIKE '%キャビンアテンダント%'
 OR ReqQualifications.name LIKE '%キャビンアテンダント%')
 AND publish_status = 1
@@ -140,21 +59,26 @@ Before optimization, my side did 2 steps for better clarity.
 During the rebuild table schema process, notice few key points:
 
 1. Highly normalized schemas
+
    Normalization is needed for keeping data consistent.
    The database schema design is highly normalized. This is no big deal when the dataset is small, but when the dataset growing huge, the highly normalized schema will be hurting the query performance, because needs to join the table to get the data from another data. Each table joins increases the query loading speed.
 
 2. Possible legacy query
+
    In reality, simply avoid optimizing the legacy query, cause most of the time, the unoptimized query serves the purpose of user request or feature. Any minor changes to the query may cause instability or bug in the application. In any normal case, stability & feature is having higher priority than performance, in short Feature > Performance.
 
 ## Possible area of optimization
 
 1. Index important Ids
+
    Quick and easy solution if never done so.
 
 2. Revise the database schema
+
    Try to denormalize the schema for better performance.
 
 3. Get the Information Architect(IA) done right
+
    In often cases of the development, it always starts with the developer or DB admin to design the database based on the requirements or documentations. Maybe can get that flow twisted by understanding what kind of info matters to the real end-user with the mockup or wireframe before hands.
 
    The schema design is based on the proposed feature and mockup. Often see the developer try to create a flexible schema or solution to fulfil any possibilities that arise, but flexibility comes with complexity. The complexity becomes a huge hurdle at a later stage. Lack of proper documentation is another pain point for complex issues and features.
